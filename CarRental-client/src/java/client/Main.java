@@ -21,13 +21,15 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
-        new Main("trips").run();
+        Main m =new Main("trips");//.run();
+        ManagerSessionRemote s = m.getNewManagerSession("test", "hertz");
+        System.out.println(s.getCarTypes("Hertz"));
     }
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
         return new HashSet<String>();
-    }
+    }h
 
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
