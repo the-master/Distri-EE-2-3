@@ -21,17 +21,22 @@ public class CarRentalSession implements CarRentalSessionRemote {
     
     @PersistenceContext
     private EntityManager em;
+    
     private String renter;
     private List<Quote> quotes = new LinkedList<Quote>();
     
     @Override
     public void createTest(testEntity test) {
         em.persist(test);
+        System.err.println("create t est was called");
     }
     
     @Override
     public testEntity getTest(int id) {
+
+        System.err.println("create t est was called");
         return em.find(testEntity.class, id);
+//    return null;
     }
     
     @Override
