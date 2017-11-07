@@ -24,10 +24,12 @@ public class CarRentalSession implements CarRentalSessionRemote {
     private String renter;
     private List<Quote> quotes = new LinkedList<Quote>();
     
+    @Override
     public void createTest(testEntity test) {
         em.persist(test);
     }
     
+    @Override
     public testEntity getTest(int id) {
         return em.find(testEntity.class, id);
     }

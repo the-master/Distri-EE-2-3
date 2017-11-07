@@ -28,14 +28,17 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
         Main m =new Main("trips");//.run();
-        ManagerSessionRemote s = m.getNewManagerSession("test", "hertz");
-        System.out.println(s.getCarTypes("Hertz"));
+        CarRentalSessionRemote session = m.getNewReservationSession("blabla");
+        testEntity test = new testEntity(1,"name");
+        session.createTest(test);
+        testEntity test2 = session.getTest(1);
+        System.out.println(test2.getName());
     }
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
         return new HashSet<String>();
-    }h
+    }
 
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {

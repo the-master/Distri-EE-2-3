@@ -9,9 +9,13 @@ import rental.Quote;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
+import rental.testEntity;
 
 @Remote
 public interface CarRentalSessionRemote {
+    
+    public void createTest(testEntity test);
+    public testEntity getTest(int id);
     
     public void setRenterName(String name);
     
