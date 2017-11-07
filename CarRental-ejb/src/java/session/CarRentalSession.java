@@ -6,19 +6,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import rental.CarType;
 import rental.Quote;
 import rental.RentalStore;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
+import rental.testEntity;
 
 @Stateful
 public class CarRentalSession implements CarRentalSessionRemote {
-
+    
+    @PersistenceContext
+    private EntityManager em;
     private String renter;
     private List<Quote> quotes = new LinkedList<Quote>();
-
+    
+    public void createTest(testEntity test) {
+        em.persist(test);
+    }
+    
+    public testEntity getTest(int id) {
+        return em.find(testEntity.class, id);
+    }
+    
     @Override
     public Set<String> getAllRentalCompanies() {
         return new HashSet<String>(RentalStore.getRentals().keySet());

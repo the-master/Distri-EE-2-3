@@ -5,15 +5,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import rental.CarType;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
+import rental.testEntity;
 import session.CarRentalSessionRemote;
 import session.ManagerSessionRemote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
+    @PersistenceContext
+    EntityManager em;
+    
     public Main(String scriptFile) {
         super(scriptFile);
     }

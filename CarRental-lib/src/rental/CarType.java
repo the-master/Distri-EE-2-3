@@ -1,8 +1,13 @@
 package rental;
 
 import java.io.Serializable;
-
-public class CarType implements Serializable{
+import javax.persistence.Entity;
+import javax.persistence.Id;
+@Entity
+public class CarType implements Serializable {
+    
+    @Id
+    private int id; // Maybe use name as id?
     
     private String name;
     private int nbOfSeats;
