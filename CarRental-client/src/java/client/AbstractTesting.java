@@ -140,6 +140,7 @@ public abstract class AbstractTesting {
 		List<String> result = new LinkedList<String>();
 		StringTokenizer stz = new StringTokenizer(regions, ":");
 		while (stz.hasMoreTokens()){
+
 			result.add(stz.nextToken());
 		}
 		return result;

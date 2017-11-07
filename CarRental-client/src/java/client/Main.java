@@ -8,6 +8,7 @@ import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import rental.CarType;
+import rental.Quote;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
@@ -26,32 +27,59 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
-        new Main("trips").run();
+        Main m =new Main("trips");//.run();
+        ManagerSessionRemote s = m.getNewManagerSession("test", "hertz");
+        System.out.println(s.getCarTypes("Hertz"));
     }
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        return new HashSet<String>();
+    }h
 
     @Override
     protected String getCheapestCarType(CarRentalSessionRemote session, Date start, Date end, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        for(String comp :session.getAllRentalCompanies())
+          for(CarType type:session.getAvailableCarTypes(start, end))
+              session.createQuote(comp, new ReservationConstraints(start, end, type.getName(), region));
+       double bestprice = Double.MAX_VALUE;
+       String rv = null
+            ;
+       for(Quote q : session.getCurrentQuotes())
+           if(q.getRentalPrice()<bestprice)
+           {
+               rv=q.getCarType();
+               bestprice=q.getRentalPrice();
+           }
+       return rv;
     }
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CarType mostPopular=null;
+        int popularity=0;
+        int temp;
+        for(CarType type:ms.getCarTypes(carRentalCompanyName))
+            if(popularity<(temp=ms.getNumberOfReservations(carRentalCompanyName, type.getName())))
+            {
+                popularity =temp;
+                mostPopular=type;
+            }
+           return mostPopular;
+                    
     }
 
     @Override
     protected CarRentalSessionRemote getNewReservationSession(String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        InitialContext c = new InitialContext();
+        return (CarRentalSessionRemote) c.lookup(CarRentalSessionRemote.class.getName());
     }
 
     @Override
     protected ManagerSessionRemote getNewManagerSession(String name, String carRentalName) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        InitialContext c = new InitialContext();
+        return (ManagerSessionRemote) c.lookup(ManagerSessionRemote.class.getName());
     }
 
     @Override
