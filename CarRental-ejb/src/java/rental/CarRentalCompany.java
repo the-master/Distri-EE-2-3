@@ -1,5 +1,6 @@
 package rental;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class CarRentalCompany {
+public class CarRentalCompany implements Serializable {
     
     @Id
     private int id;
@@ -37,6 +38,10 @@ public class CarRentalCompany {
             carTypes.add(car.getType());
         }
     }
+    
+    public CarRentalCompany() {
+        
+    }
 
     /********
      * NAME *
@@ -46,14 +51,14 @@ public class CarRentalCompany {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
     /***********
      * Regions *
      **********/
-    private void setRegions(List<String> regions) {
+    public void setRegions(List<String> regions) {
         this.regions = regions;
     }
     

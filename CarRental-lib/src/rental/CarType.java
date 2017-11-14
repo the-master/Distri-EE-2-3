@@ -2,13 +2,13 @@ package rental;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
 @Entity
 public class CarType implements Serializable {
     
     @Id
-    private int id; // Maybe use name as id?
-    
     private String name;
     private int nbOfSeats;
     private boolean smokingAllowed;
@@ -26,6 +26,11 @@ public class CarType implements Serializable {
         this.trunkSpace = trunkSpace;
         this.rentalPricePerDay = rentalPricePerDay;
         this.smokingAllowed = smokingAllowed;
+    }
+    
+    // Needed for entity class
+    public CarType() {
+        
     }
 
     public String getName() {

@@ -28,15 +28,11 @@ public class CarRentalSession implements CarRentalSessionRemote {
     @Override
     public void createTest(testEntity test) {
         em.persist(test);
-        System.err.println("create t est was called");
     }
     
     @Override
-    public testEntity getTest(int id) {
-
-        System.err.println("create t est was called");
-        return em.find(testEntity.class, id);
-//    return null;
+    public testEntity getTest(String name) {
+        return em.find(testEntity.class, name);
     }
     
     @Override

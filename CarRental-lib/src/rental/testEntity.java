@@ -11,26 +11,16 @@ import javax.persistence.Id;
 
 @Entity
 public class testEntity implements Serializable {
-    private int id;
+    
+    @Id
     private String name;
     
     public testEntity() {    
     }
     
-    public testEntity(int id, String name) {
-        this.id = id;
+    public testEntity(String name) {
         this.name = name;
     }
-
-    @Id
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    
     
     public String getName() {
         return name;

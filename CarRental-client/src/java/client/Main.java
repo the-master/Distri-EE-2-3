@@ -18,7 +18,6 @@ import session.ManagerSessionRemote;
 
 public class Main extends AbstractTestManagement<CarRentalSessionRemote, ManagerSessionRemote> {
 
-    @PersistenceContext
     EntityManager em;
     
     public Main(String scriptFile) {
@@ -29,9 +28,9 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         // TODO: use updated manager interface to load cars into companies
         Main m =new Main("trips");//.run();
         CarRentalSessionRemote session = m.getNewReservationSession("blabla");
-        testEntity test = new testEntity(1,"name");
+        testEntity test = new testEntity("name");
         session.createTest(test);
-        testEntity test2 = session.getTest(1);
+        testEntity test2 = session.getTest("name");
         System.out.println(test2.getName());
     }
 

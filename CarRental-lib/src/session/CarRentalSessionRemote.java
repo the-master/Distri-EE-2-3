@@ -15,7 +15,7 @@ import rental.testEntity;
 public interface CarRentalSessionRemote {
     
     public void createTest(testEntity test);
-    public testEntity getTest(int id);
+    public testEntity getTest(String id);
     
     public void setRenterName(String name);
     
