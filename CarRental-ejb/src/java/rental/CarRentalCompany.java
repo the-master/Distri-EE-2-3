@@ -26,7 +26,7 @@ public class CarRentalCompany implements Serializable {
     private List<Car> cars;
     
     @OneToMany(cascade=CascadeType.ALL)
-    private Set<CarType> carTypes = new HashSet<CarType>();
+    private Set<CarType> carTypes;
     
     private List<String> regions;
 
@@ -207,12 +207,12 @@ public class CarRentalCompany implements Serializable {
 
     public void addCar(Car car) {
         this.carTypes.add(car.getType());
-//        System.out.println(car.getType());
-        car.setType(this.getType(car.getType().getName()));
+        System.out.println(car.getType().getId());
+       CarType t =this.getType(car.getType().getName());
+        System.out.println("#"+t.getId());
         Car c = new Car();
-        c.setType(this.getType(car.getType().getName()));
-        c.setId(car.getId());
-        this.cars.add(c);
+//        this.cars.add(c);
+//        c.setType(this.getType(car.getType().getName()));
 //        this.cars.add(car);
     }
 }

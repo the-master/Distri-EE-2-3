@@ -21,8 +21,8 @@ public class Car implements  Serializable{
     
     @OneToOne
     private CarType type;
-    
-    @OneToMany(cascade=CascadeType.ALL)
+//    
+//    @OneToMany(cascade=CascadeType.ALL)
     private Set<Reservation> reservations;
 
     /***************
@@ -94,7 +94,5 @@ public class Car implements  Serializable{
         this.id = id;
     }
 
-    public void addCar(Car c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 }

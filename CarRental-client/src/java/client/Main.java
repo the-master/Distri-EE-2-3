@@ -31,7 +31,6 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
       ManagerSessionRemote ses= m.getNewManagerSession("test", "test");
         RentalCompanyLoader.CrcData d = RentalCompanyLoader.loadData("hertz.csv");
         System.out.println(d.regions);
-        System.out.println("test"+d.cars.get(1).getId());
         ses.createRentalCompany("hertz", d.regions, d.cars);
         System.out.println(ses.companies());
         System.out.println(ses.getCarTypes("hertz"));
