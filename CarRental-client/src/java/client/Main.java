@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,12 +28,20 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
         Main m =new Main("trips");//.run();
-        CarRentalSessionRemote session = m.getNewReservationSession("blabla");
-        testEntity test = new testEntity("name");
-        session.createTest(test);
-        testEntity test2 = session.getTest("name");
-        System.out.println(test2.getName());
-    }
+      ManagerSessionRemote ses= m.getNewManagerSession("test", "test");
+      ses.createCartype("merc", 1, 1.1f, 11, true);
+      ses.createCartype("merc2", 1, 1.1f, 11, true);
+      
+      for(CarType t :ses.getCarTypes("test"))
+      {
+          ses.createCar(t);
+          ses.createCar(t);
+      }
+      for(int i:ses.getCarIds("test", "test"))
+            System.out.println(i);
+      for(CarType ty:ses.getCarTypes("test"))
+        System.out.println(ty);
+          }
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {

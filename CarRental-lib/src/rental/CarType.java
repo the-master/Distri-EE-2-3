@@ -9,17 +9,55 @@ import javax.persistence.Id;
 public class CarType implements Serializable {
     
     @Id
+    @GeneratedValue
+    int id;
+    
     private String name;
+    
+    
     private int nbOfSeats;
     private boolean smokingAllowed;
     private double rentalPricePerDay;
     //trunk space in liters
     private float trunkSpace;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNbOfSeats(int nbOfSeats) {
+        this.nbOfSeats = nbOfSeats;
+    }
+
+    public void setSmokingAllowed(boolean smokingAllowed) {
+        this.smokingAllowed = smokingAllowed;
+    }
+
+    public void setRentalPricePerDay(double rentalPricePerDay) {
+        this.rentalPricePerDay = rentalPricePerDay;
+    }
+
+    public void setTrunkSpace(float trunkSpace) {
+        this.trunkSpace = trunkSpace;
+    }
+    
+    
     
     /***************
      * CONSTRUCTOR *
      ***************/
-    
+    // Needed for entity class
+    public CarType() {
+        
+    }
+//    public static CarType createCar(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed){
+//      CarType t = new CarType();
+//      return t;
+//    }
     public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed) {
         this.name = name;
         this.nbOfSeats = nbOfSeats;
@@ -28,10 +66,7 @@ public class CarType implements Serializable {
         this.smokingAllowed = smokingAllowed;
     }
     
-    // Needed for entity class
-    public CarType() {
-        
-    }
+   
 
     public String getName() {
     	return name;
@@ -51,6 +86,9 @@ public class CarType implements Serializable {
     
     public float getTrunkSpace() {
     	return trunkSpace;
+    }
+    public int getId(){
+        return this.id;
     }
     
     /*************

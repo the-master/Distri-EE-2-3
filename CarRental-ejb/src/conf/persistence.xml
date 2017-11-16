@@ -3,7 +3,9 @@
   <persistence-unit name="CarRental-ejbPU" transaction-type="JTA">
     <jta-data-source>jdbc/sample</jta-data-source>
     <class>rental.testEntity</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <class>rental.CarType</class>
+    <class>rental.Car</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>

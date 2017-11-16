@@ -15,5 +15,7 @@ public interface ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type, int carId);
     
     public int getNumberOfReservations(String company, String type);
-      
+    
+    public void createCartype(String name,int numberOfSeats,float trunkspace,double pricePerDay,boolean smokingAllowed);
+    public void createCar(CarType t);
 }
