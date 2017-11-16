@@ -1,4 +1,4 @@
-package rental;
+package client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,46 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import rental.Car;
 import rental.Car;
-import rental.CarRentalCompany;
-import rental.CarRentalCompany;
 import rental.CarType;
 import rental.CarType;
 
-public class RentalStore {
+public class RentalCompanyLoader {
 
-    private static Map<String, CarRentalCompany> rentals;
 
-    public static CarRentalCompany getRental(String company) {
-        
-        CarRentalCompany out = RentalStore.getRentals().get(company);
-        if (out == null) {
-            throw new IllegalArgumentException("Company doesn't exist!: " + company);
-        }
-        return out;
-    }
     
-    public static synchronized Map<String, CarRentalCompany> getRentals(){
-        if(rentals == null){
-            rentals = new HashMap<String, CarRentalCompany>();
-            loadRental("hertz.csv");
-            loadRental("dockx.csv");
-        }
-        return rentals;
-    }
 
-    public static void loadRental(String datafile) {
-        try {
-            CrcData data = loadData(datafile);
-            CarRentalCompany company = new CarRentalCompany(data.name, data.regions, data.cars);
-            rentals.put(data.name, company);
-            Logger.getLogger(RentalStore.class.getName()).log(Level.INFO, "Loaded {0} from file {1}", new Object[]{data.name, datafile});
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(RentalStore.class.getName()).log(Level.SEVERE, "bad file", ex);
-        } catch (IOException ex) {
-            Logger.getLogger(RentalStore.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
     public static CrcData loadData(String datafile)
             throws NumberFormatException, IOException {
@@ -62,7 +30,7 @@ public class RentalStore {
         int nextuid = 0;
        
         //open file from jar
-        BufferedReader in = new BufferedReader(new InputStreamReader(RentalStore.class.getClassLoader().getResourceAsStream(datafile)));
+        BufferedReader in = new BufferedReader(new InputStreamReader(RentalCompanyLoader.class.getClassLoader().getResourceAsStream(datafile)));
         
         try {
             while (in.ready()) {
@@ -95,7 +63,7 @@ public class RentalStore {
         return out;
     }
     
-    static class CrcData {
+   public static class CrcData {
             public List<Car> cars = new LinkedList<Car>();
             public String name;
             public List<String> regions =  new LinkedList<String>();

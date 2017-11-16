@@ -29,19 +29,25 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         // TODO: use updated manager interface to load cars into companies
         Main m =new Main("trips");//.run();
       ManagerSessionRemote ses= m.getNewManagerSession("test", "test");
-      ses.createCartype("merc", 1, 1.1f, 11, true);
-      ses.createCartype("merc2", 1, 1.1f, 11, true);
-      
-      for(CarType t :ses.getCarTypes("test"))
-      {
-          ses.createCar(t);
-          ses.createCar(t);
+        RentalCompanyLoader.CrcData d = RentalCompanyLoader.loadData("hertz.csv");
+        System.out.println(d.regions);
+        System.out.println("test"+d.cars.get(1).getId());
+        ses.createRentalCompany("hertz", d.regions, d.cars);
+        System.out.println(ses.companies());
+        System.out.println(ses.getCarTypes("hertz"));
+//      ses.createCartype("merc", 1, 1.1f, 11, true);
+//      ses.createCartype("merc2", 1, 1.1f, 11, true);
+//      
+//      for(CarType t :ses.getCarTypes("test"))
+//      {
+//          ses.createCar(t);
+//          ses.createCar(t);
+//      }
+//  
+//      
       }
-      for(int i:ses.getCarIds("test", "test"))
-            System.out.println(i);
-      for(CarType ty:ses.getCarTypes("test"))
-        System.out.println(ty);
-          }
+//      for(String s:ses.getReservations())
+       
 
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {

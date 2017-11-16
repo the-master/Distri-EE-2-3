@@ -2,10 +2,14 @@ package rental;
 
 import java.io.Serializable;
 import java.util.Date;
-
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+@MappedSuperclass
 public class Quote implements Serializable {
-
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+    @Temporal(TemporalType.DATE)
     private Date endDate;
     private String carRenter;
     private String rentalCompany;
@@ -112,4 +116,29 @@ public class Quote implements Serializable {
             return false;
 	return true;
     }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setCarRenter(String carRenter) {
+        this.carRenter = carRenter;
+    }
+
+    public void setRentalCompany(String rentalCompany) {
+        this.rentalCompany = rentalCompany;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public void setRentalPrice(double rentalPrice) {
+        this.rentalPrice = rentalPrice;
+    }
+    
 }

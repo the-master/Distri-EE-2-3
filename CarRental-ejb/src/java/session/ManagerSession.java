@@ -1,6 +1,9 @@
 package session;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -12,6 +15,7 @@ import rental.Car;
 import rental.CarRentalCompany;
 import rental.CarType;
 import rental.RentalStore;
+import rental.Res;
 import rental.Reservation;
 
 @Stateless
@@ -21,7 +25,8 @@ public class ManagerSession implements ManagerSessionRemote {
     EntityManager em;
     @Override
     public Set<CarType> getCarTypes(String company) {
-        return new HashSet<CarType>(em.createQuery("SELECT a FROM CarType a").getResultList());
+        return new HashSet(em.find(CarRentalCompany.class, company).getAllTypes());
+//        return new HashSet<CarType>(em.createQuery("SELECT a FROM CarType a").getResultList());
         
         
 //        try {
@@ -35,6 +40,7 @@ public class ManagerSession implements ManagerSessionRemote {
     public void createCar(CarType type){
         em.persist(new Car(0, type));
     }
+    
     @Override
     public Set<Integer> getCarIds(String company, String type) {
         final HashSet<Integer> rv = new HashSet<>();
@@ -91,5 +97,27 @@ public class ManagerSession implements ManagerSessionRemote {
         em.persist(t);
         
     }
+    @Override
+    public void createRentalCompany(String company,List<String> regions,List<Car> cars)
+    {
+        System.out.println("test");
+        CarRentalCompany c = new CarRentalCompany();
+        System.out.println(c);
+        c.setName(company);
+        c.setRegions(regions);
+        
+        em.persist(c);
+      for(Car car:cars)
+         c.addCar(car);
+    }
+    public List<String> companies(){
+        List<String> rv = new ArrayList<>();
+        for(CarRentalCompany c: (List<CarRentalCompany>)em.createQuery("SELECT c FROM CarRentalCompany c").getResultList())
+            rv.add(c.getName());
+        return rv;
+    }
 
+    
+
+ 
 }

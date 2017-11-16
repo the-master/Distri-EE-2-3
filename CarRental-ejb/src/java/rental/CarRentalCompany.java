@@ -9,20 +9,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class CarRentalCompany implements Serializable {
-    
     @Id
-    private int id;
-
-    private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     private String name;
+    
+    private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
+    
+    
+    @OneToMany(cascade=CascadeType.ALL)
     private List<Car> cars;
+    
+    @OneToMany(cascade=CascadeType.ALL)
     private Set<CarType> carTypes = new HashSet<CarType>();
-	private List<String> regions;
+    
+    private List<String> regions;
 
 	
     /***************
@@ -197,5 +203,16 @@ public class CarRentalCompany implements Serializable {
             }
         }
         return out;
+    }
+
+    public void addCar(Car car) {
+        this.carTypes.add(car.getType());
+//        System.out.println(car.getType());
+        car.setType(this.getType(car.getType().getName()));
+        Car c = new Car();
+        c.setType(this.getType(car.getType().getName()));
+        c.setId(car.getId());
+        this.cars.add(c);
+//        this.cars.add(car);
     }
 }

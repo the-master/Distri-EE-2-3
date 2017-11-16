@@ -10,7 +10,7 @@ public class CarType implements Serializable {
     
     @Id
     @GeneratedValue
-    int id;
+    private int id;
     
     private String name;
     
@@ -21,10 +21,7 @@ public class CarType implements Serializable {
     //trunk space in liters
     private float trunkSpace;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+  
     public void setName(String name) {
         this.name = name;
     }
@@ -43,6 +40,14 @@ public class CarType implements Serializable {
 
     public void setTrunkSpace(float trunkSpace) {
         this.trunkSpace = trunkSpace;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
     
     
@@ -87,9 +92,7 @@ public class CarType implements Serializable {
     public float getTrunkSpace() {
     	return trunkSpace;
     }
-    public int getId(){
-        return this.id;
-    }
+ 
     
     /*************
      * TO STRING *
