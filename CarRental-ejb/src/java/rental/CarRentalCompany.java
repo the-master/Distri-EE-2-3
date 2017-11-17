@@ -10,12 +10,16 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PersistenceContext;
 
 @Entity
 public class CarRentalCompany implements Serializable {
+    
     @Id
     private String name;
     
@@ -23,13 +27,13 @@ public class CarRentalCompany implements Serializable {
     
     
     @OneToMany()
-    private List<Car> cars;
+    private List<Car2> cars;
     
     
     
     @OneToMany()
     private Set<CarType> carTypes;
-    
+    @ElementCollection
     private List<String> regions;
 
 	
@@ -37,12 +41,12 @@ public class CarRentalCompany implements Serializable {
      * CONSTRUCTOR *
      ***************/
 
-    public CarRentalCompany(String name, List<String> regions, List<Car> cars) {
+    public CarRentalCompany(String name, List<String> regions, List<Car2> cars) {
         logger.log(Level.INFO, "<{0}> Car Rental Company {0} starting up...", name);
         setName(name);
         this.cars = cars;
         setRegions(regions);
-        for (Car car : cars) {
+        for (Car2 car : cars) {
             carTypes.add(car.getType());
         }
     }
@@ -97,7 +101,7 @@ public class CarRentalCompany implements Serializable {
 
     public Set<CarType> getAvailableCarTypes(Date start, Date end) {
         Set<CarType> availableCarTypes = new HashSet<CarType>();
-        for (Car car : cars) {
+        for (Car2 car : cars) {
             if (car.isAvailable(start, end)) {
                 availableCarTypes.add(car.getType());
             }
@@ -109,8 +113,8 @@ public class CarRentalCompany implements Serializable {
      * CARS *
      *********/
     
-    public Car getCar(int uid) {
-        for (Car car : cars) {
+    public Car2 getCar(int uid) {
+        for (Car2 car : cars) {
             if (car.getId() == uid) {
                 return car;
             }
@@ -118,9 +122,9 @@ public class CarRentalCompany implements Serializable {
         throw new IllegalArgumentException("<" + name + "> No car with uid " + uid);
     }
 
-    public Set<Car> getCars(CarType type) {
-        Set<Car> out = new HashSet<Car>();
-        for (Car car : cars) {
+    public Set<Car2> getCars(CarType type) {
+        Set<Car2> out = new HashSet<Car2>();
+        for (Car2 car : cars) {
             if (car.getType().equals(type)) {
                 out.add(car);
             }
@@ -128,23 +132,35 @@ public class CarRentalCompany implements Serializable {
         return out;
     }
     
-     public Set<Car> getCars(String type) {
-        Set<Car> out = new HashSet<Car>();
-        for (Car car : cars) {
+     public Set<Car2> getCars(String type) {
+        Set<Car2> out = new HashSet<Car2>();
+        for (Car2 car : cars) {
             if (type.equals(car.getType().getName())) {
                 out.add(car);
             }
         }
         return out;
     }
-
-    private List<Car> getAvailableCars(String carType, Date start, Date end) {
-        List<Car> availableCars = new LinkedList<Car>();
-        for (Car car : cars) {
-            if (car.getType().getName().equals(carType) && car.isAvailable(start, end)) {
-                availableCars.add(car);
-            }
-        }
+     //TODO remove
+    private List<Car2> getAvailableCars(String carType, Date start, Date end) {
+        List<Car2> availableCars=null;
+        
+////        System.out.println( availableCars=em.createQuery("SELECT c FROM Car2 c WHERE NOT EXISTS ("
+////                + "SELECT r FROM c.reservations r WHERE r.endDate > :start AND :end >r.startDate "
+////                + ") " ).setParameter("start",start).setParameter("end",end).getResultList());
+////        
+//        System.out.println(em);
+//        availableCars=em.createQuery(
+//                "SELECT c FROM Car2 c WHERE NOT EXISTS ("
+//                + "SELECT r FROM c.reservations r )"
+//                + "" ).getResultList();
+//        
+////        List<Car2> availableCars = new LinkedList<Car2>();
+////        for (Car2 car : cars) {
+////            if (car.getType().getName().equals(carType) && car.isAvailable(start, end)) {
+////                availableCars.add(car);
+////            }
+////        }
         return availableCars;
     }
 
@@ -178,12 +194,12 @@ public class CarRentalCompany implements Serializable {
 
     public Reservation confirmQuote(Quote quote) throws ReservationException {
         logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
-        List<Car> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
+        List<Car2> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
         if (availableCars.isEmpty()) {
             throw new ReservationException("Reservation failed, all cars of type " + quote.getCarType()
                     + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate());
         }
-        Car car = availableCars.get((int) (Math.random() * availableCars.size()));
+        Car2 car = availableCars.get((int) (Math.random() * availableCars.size()));
 
         Reservation res = new Reservation(quote, car.getId());
         car.addReservation(res);
@@ -198,7 +214,7 @@ public class CarRentalCompany implements Serializable {
     public Set<Reservation> getReservationsBy(String renter) {
         logger.log(Level.INFO, "<{0}> Retrieving reservations by {1}", new Object[]{name, renter});
         Set<Reservation> out = new HashSet<Reservation>();
-        for(Car c : cars) {
+        for(Car2 c : cars) {
             for(Reservation r : c.getReservations()) {
                 if(r.getCarRenter().equals(renter))
                     out.add(r);
@@ -209,7 +225,7 @@ public class CarRentalCompany implements Serializable {
     public void addCarType(CarType type){
         this.carTypes.add(type);
     }
-    public void addCar(Car car) {
+    public void addCar(Car2 car) {
         this.cars.add(car);
         
 //        System.out.println(car.getType().getId());

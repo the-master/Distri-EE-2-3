@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import rental.Car;
+import rental.Car2;
 import rental.CarRentalCompany;
 import rental.CarType;
 import rental.RentalStore;
@@ -42,15 +42,15 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<Integer> getCarIds(String company, String type) {
         final HashSet<Integer> rv = new HashSet<>();
-        em.createQuery("SELECT c FROM Car c").getResultList().forEach(new Consumer() {
-
-            @Override
-            public void accept(Object t) {
-                rv.add(((Car)t).getId());
-                System.out.println(t);
-            }
-        });
-        return rv;
+        return new HashSet<Integer>(em.createQuery("SELECT c.id FROM Car c").getResultList());
+//        .forEach(new Consumer() {
+//
+//            @Override
+//            public void accept(Object t) {
+//                rv.add(((Car2)t).getId());
+//                System.out.println(t);
+//            }
+//        });
       //        Set<Integer> out = new HashSet<Integer>();
 //        try {
 //            for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -65,17 +65,19 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
+        return em.createQuery("SELECT r FROM Reservation r JOIN CAR2 c WHERE r MEMBER OF c.reservations AND c.id=:id").setParameter("id", id).getResultList().size();
 //        try {
 //            return RentalStore.getRental(company).getCar(id).getReservations().size();
 //        } catch (IllegalArgumentException ex) {
 //            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
 //            return 0;
 //        }
-    return 0;
     }
 
     @Override
     public int getNumberOfReservations(String company, String type) {
+        
+//        em.createQuery("SELECT r FROM Reservation r JOIN (SELECT  car FROM CarRentalCompany c JOIN c.cars car WHERE c.name=:name AND car.type.name=:type) c WHERE" )
         Set<Reservation> out = new HashSet<Reservation>();
 //        try {
 //            for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -96,7 +98,7 @@ public class ManagerSession implements ManagerSessionRemote {
         
     }
     @Override
-    public void createRentalCompany(String company,List<String> regions,List<Car> cars)
+    public void createRentalCompany(String company,List<String> regions,List<Car2> cars)
     {
         System.out.println("test");
         CarRentalCompany c = new CarRentalCompany();
@@ -106,18 +108,22 @@ public class ManagerSession implements ManagerSessionRemote {
         
         em.persist(c);
         em.flush();
-      for(Car car:cars)
+      for(Car2 car:cars)
       {
+          if(!em.contains(car.getType())){
           em.persist(car.getType());
           em.flush();
           c.addCarType(car.getType());
-          Car ca=new Car();
+          }
+          Car2 ca=new Car2();
           em.persist(ca);
           em.flush();
           ca.setType(car.getType());
-          c.addCar(ca);
-          em.persist(c);
+          em.persist(ca);
           em.flush();
+          c.addCar(ca);
+//          em.persist(c);
+//          em.flush();
           System.out.println("done with 1 car");
 //          c.addCarType(car.getType());
 //          Car ca=new Car();
@@ -128,12 +134,23 @@ public class ManagerSession implements ManagerSessionRemote {
           
 //          c.addCar(car);
       }
+      em.flush();
     }
     public List<String> companies(){
         List<String> rv = new ArrayList<>();
         for(CarRentalCompany c: (List<CarRentalCompany>)em.createQuery("SELECT c FROM CarRentalCompany c").getResultList())
             rv.add(c.getName());
         return rv;
+    }
+
+    @Override
+    public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Set<String> getBestClients() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

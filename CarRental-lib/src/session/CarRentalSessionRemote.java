@@ -14,9 +14,6 @@ import rental.testEntity;
 @Remote
 public interface CarRentalSessionRemote {
     
-    public void createTest(testEntity test);
-    public testEntity getTest(String id);
-    
     public void setRenterName(String name);
     
     public Set<String> getAllRentalCompanies();
@@ -28,5 +25,8 @@ public interface CarRentalSessionRemote {
     public List<Quote> getCurrentQuotes();
     
     public List<Reservation> confirmQuotes() throws ReservationException;
+
+    public String getCheapestCarType(Date start, Date end, String region);
+
     
 }

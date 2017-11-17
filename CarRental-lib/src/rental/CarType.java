@@ -11,7 +11,7 @@ public class CarType implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    
+   
     private String name;
     
     
@@ -42,13 +42,7 @@ public class CarType implements Serializable {
         this.trunkSpace = trunkSpace;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
+ 
     
     
     

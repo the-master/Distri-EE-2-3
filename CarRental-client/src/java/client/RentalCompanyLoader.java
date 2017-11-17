@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rental.Car;
-import rental.Car;
+import rental.Car2;
+import rental.Car2;
 import rental.CarType;
 import rental.CarType;
 
@@ -52,8 +52,8 @@ public class RentalCompanyLoader {
                             Boolean.parseBoolean(csvReader.nextToken()));
                     //create N new cars with given type, where N is the 5th field
                     for (int i = Integer.parseInt(csvReader.nextToken()); i > 0; i--) {
-                        Car c =new Car();
-                        c.setType( type);
+                        Car2 c =new Car2();
+                        c.setType(type);
                         out.cars.add(c);
                     }        
                 }
@@ -66,7 +66,7 @@ public class RentalCompanyLoader {
     }
     
    public static class CrcData {
-            public List<Car> cars = new LinkedList<Car>();
+            public List<Car2> cars = new LinkedList<Car2>();
             public String name;
             public List<String> regions =  new LinkedList<String>();
     }

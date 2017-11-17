@@ -5,7 +5,7 @@
     <class>rental.testEntity</class>
     <class>rental.CarType</class>
     <class>rental.Res</class>
-    <class>rental.Car</class>
+    <class>rental.Car2</class>
     <class>rental.Reservation</class>
     <class>rental.CarRentalCompany</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
