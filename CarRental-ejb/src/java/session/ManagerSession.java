@@ -25,7 +25,8 @@ public class ManagerSession implements ManagerSessionRemote {
     EntityManager em;
     @Override
     public Set<CarType> getCarTypes(String company) {
-        return new HashSet(em.find(CarRentalCompany.class, company).getAllTypes());
+        return new HashSet<>(em.createQuery("SELECT c FROM CarRentalCompany a JOIN a.carTypes c WHERE a.name=:name").setParameter("name", company).getResultList());
+//        return new HashSet(em.find(CarRentalCompany.class, company).getAllTypes());
 //        return new HashSet<CarType>(em.createQuery("SELECT a FROM CarType a").getResultList());
         
         
@@ -36,10 +37,7 @@ public class ManagerSession implements ManagerSessionRemote {
 //            return null;
 //        }
     }
-    @Override
-    public void createCar(CarType type){
-        em.persist(new Car(0, type));
-    }
+    
     
     @Override
     public Set<Integer> getCarIds(String company, String type) {
@@ -107,8 +105,29 @@ public class ManagerSession implements ManagerSessionRemote {
         c.setRegions(regions);
         
         em.persist(c);
+        em.flush();
       for(Car car:cars)
-         c.addCar(car);
+      {
+          em.persist(car.getType());
+          em.flush();
+          c.addCarType(car.getType());
+          Car ca=new Car();
+          em.persist(ca);
+          em.flush();
+          ca.setType(car.getType());
+          c.addCar(ca);
+          em.persist(c);
+          em.flush();
+          System.out.println("done with 1 car");
+//          c.addCarType(car.getType());
+//          Car ca=new Car();
+//          ca.setType(car.getType());
+//          em.clear();
+//          em.persist(ca);
+//          em.flush();
+          
+//          c.addCar(car);
+      }
     }
     public List<String> companies(){
         List<String> rv = new ArrayList<>();

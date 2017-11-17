@@ -19,7 +19,7 @@ public interface ManagerSessionRemote {
     
     public void createCartype(String name,int numberOfSeats,float trunkspace,double pricePerDay,boolean smokingAllowed);
     
-    public void createCar(CarType t);
+//    public void createCar(CarType t);
     public void createRentalCompany(String company,List<String> regions,List<Car> cars);
     public List<String> companies();
 }

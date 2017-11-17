@@ -22,10 +22,12 @@ public class CarRentalCompany implements Serializable {
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
     
     
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany()
     private List<Car> cars;
     
-    @OneToMany(cascade=CascadeType.ALL)
+    
+    
+    @OneToMany()
     private Set<CarType> carTypes;
     
     private List<String> regions;
@@ -204,15 +206,19 @@ public class CarRentalCompany implements Serializable {
         }
         return out;
     }
-
+    public void addCarType(CarType type){
+        this.carTypes.add(type);
+    }
     public void addCar(Car car) {
-        this.carTypes.add(car.getType());
-        System.out.println(car.getType().getId());
-       CarType t =this.getType(car.getType().getName());
-        System.out.println("#"+t.getId());
-        Car c = new Car();
-//        this.cars.add(c);
+        this.cars.add(car);
+        
+//        System.out.println(car.getType().getId());
+//       CarType t =this.getType(car.getType().getName());
+//        System.out.println("#"+t.getId());
+//        Car c = new Car();
 //        c.setType(this.getType(car.getType().getName()));
 //        this.cars.add(car);
     }
+
+    
 }

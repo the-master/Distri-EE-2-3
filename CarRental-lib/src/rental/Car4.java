@@ -17,13 +17,17 @@ import javax.persistence.OneToOne;
  * @author s0217931
  */
 @Entity
-public class Car implements Serializable{
+public class Car4 implements Serializable{
     @Id
     @GeneratedValue
     int id;
     @OneToOne
     CarType type;
-    public Car(){
+    public Car4(){
+        
+    }
+    public Car4(int i,CarType t){
+        type=t;
     }
     public int getId() {
         return id;
