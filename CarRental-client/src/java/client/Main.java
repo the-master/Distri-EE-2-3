@@ -36,6 +36,7 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         managerSession.createRentalCompany("hertz", d.regions, d.cars);
         d = RentalCompanyLoader.loadData("dockx.csv");
         managerSession.createRentalCompany("dockx", d.regions, d.cars);
+        System.out.println(rentals.getAvailableCarTypes(new Date(0),new Date(10)));
         m.run();
 //        System.out.println(m.getCheapestCarType(rentals, new Date(0   ),new Date(100), "Brussels"));
 //      ses.createCartype("merc", 1, 1.1f, 11, true);

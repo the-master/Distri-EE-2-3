@@ -49,8 +49,8 @@ public class CarRentalSession implements CarRentalSessionRemote {
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         
         List<CarType> availableCarTypes ;
-       availableCarTypes = em.createQuery("SELECT a FROM (SELECT c FROM Car2 c WHERE NOT EXISTS ("
-                + "SELECT r FROM c.reservations r WHERE r.endDate > :start AND :end >r.startDate )).type a"
+       availableCarTypes = em.createQuery("SELECT c.type FROM Car2 c WHERE NOT EXISTS ("
+                + "SELECT r FROM c.reservations r WHERE r.endDate > :start AND :end >r.startDate )"
                 + " " ).setParameter("start",start).setParameter("end",end).getResultList();
         return availableCarTypes;
     }
