@@ -49,9 +49,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public void createRentalCompany(String company,List<String> regions,List<Car2> cars)
     {
-        System.out.println("test");
         CarRentalCompany c = new CarRentalCompany();
-        System.out.println(c);
         c.setName(company);
         c.setRegions(regions);
         
@@ -71,7 +69,6 @@ public class ManagerSession implements ManagerSessionRemote {
           em.persist(ca);
           em.flush();
           c.addCar(ca);
-          System.out.println("done with 1 car");
       }
       em.flush();
     }

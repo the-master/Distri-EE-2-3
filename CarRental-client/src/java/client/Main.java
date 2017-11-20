@@ -30,7 +30,6 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         managerSession.createRentalCompany("Hertz", d.regions, d.cars);
         d = RentalCompanyLoader.loadData("dockx.csv");
         managerSession.createRentalCompany("Dockx", d.regions, d.cars);
-        System.out.println(rentals.getAvailableCarTypes(new Date(0),new Date(10)));
         m.run();    
     }
 
@@ -79,7 +78,7 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
         HashSet<String> rentalCompanies = (HashSet) session.getAllRentalCompanies();
         for (String company : rentalCompanies) {
             try {
-                session.createQuote(company, new ReservationConstraints(start, end, carType, region));
+                System.out.println(session.createQuote(company, new ReservationConstraints(start, end, carType, region)));
                 return;
             } catch (ReservationException e) {
                 

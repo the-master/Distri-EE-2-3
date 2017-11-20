@@ -142,9 +142,9 @@ public class CarRentalCompany implements Serializable {
         return out;
     }
      //TODO remove
-    private List<Car2> getAvailableCars(String carType, Date start, Date end) {
-        List<Car2> availableCars=null;
-        
+//    private List<Car2> getAvailableCars(String carType, Date start, Date end) {
+//        List<Car2> availableCars=null;
+//        
 ////        System.out.println( availableCars=em.createQuery("SELECT c FROM Car2 c WHERE NOT EXISTS ("
 ////                + "SELECT r FROM c.reservations r WHERE r.endDate > :start AND :end >r.startDate "
 ////                + ") " ).setParameter("start",start).setParameter("end",end).getResultList());
@@ -161,8 +161,8 @@ public class CarRentalCompany implements Serializable {
 ////                availableCars.add(car);
 ////            }
 ////        }
-        return availableCars;
-    }
+//        return availableCars;
+//    }
 
     /****************
      * RESERVATIONS *
@@ -193,20 +193,20 @@ public class CarRentalCompany implements Serializable {
         return rentalPricePerDay * Math.ceil((end.getTime() - start.getTime())
                 / (1000 * 60 * 60 * 24D));
     }
-
-    public Reservation confirmQuote(Quote quote) throws ReservationException {
-        logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
-        List<Car2> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
-        if (availableCars.isEmpty()) {
-            throw new ReservationException("Reservation failed, all cars of type " + quote.getCarType()
-                    + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate());
-        }
-        Car2 car = availableCars.get((int) (Math.random() * availableCars.size()));
-
-        Reservation res = new Reservation(quote, car.getId());
-        car.addReservation(res);
-        return res;
-    }
+//
+//    public Reservation confirmQuote(Quote quote) throws ReservationException {
+//        logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
+//        List<Car2> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
+//        if (availableCars.isEmpty()) {
+//            throw new ReservationException("Reservation failed, all cars of type " + quote.getCarType()
+//                    + " are unavailable from " + quote.getStartDate() + " to " + quote.getEndDate());
+//        }
+//        Car2 car = availableCars.get((int) (Math.random() * availableCars.size()));
+//
+//        Reservation res = new Reservation(quote, car.getId());
+//        car.addReservation(res);
+//        return res;
+//    }
 
     public void cancelReservation(Reservation res) {
         logger.log(Level.INFO, "<{0}> Cancelling reservation {1}", new Object[]{name, res.toString()});
