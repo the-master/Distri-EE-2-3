@@ -88,13 +88,16 @@ public class CarRentalSession implements CarRentalSessionRemote {
                 
             for (Quote quote : quotes) {
                 List<Car2> availableCars;
-        System.out.println( availableCars=em.createQuery("SELECT c FROM Car2 c WHERE NOT EXISTS ("
-                + "SELECT r FROM c.reservations r WHERE r.endDate > :start AND :end >r.startDate "
-                + ") " ).setParameter("start",quote.getStartDate()).setParameter("end",quote.getEndDate()).getResultList());
+        System.out.println( availableCars=em.createQuery("SELECT c FROM Car2 c WHERE c.type.name = :type AND NOT EXISTS ("
+                + "SELECT r FROM c.reservations r WHERE r.endDate >= :start AND :end >=r.startDate "
+                + ") " ).setParameter("type", quote.getCarType()).setParameter("start",quote.getStartDate()).setParameter("end",quote.getEndDate()).getResultList());
                 if(availableCars.size()==0)
                     throw new ReservationException("");
-                Reservation reservation =new Reservation(quote, availableCars.get(0).getId());
+                Car2 car=availableCars.get(0);
+                Reservation reservation =new Reservation(quote, car.getId());
                 em.persist(reservation);
+                car.addReservation(reservation);
+                em.persist(car);
                 done.add(reservation);
                 
 //                done.add(em.find(CarRentalCompany.class, quote.getRentalCompany()).confirmQuote(quote));

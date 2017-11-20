@@ -26,18 +26,20 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
     }
 
     public static void main(String[] args) throws Exception {
+        test2();
+        return;
         // TODO: use updated manager interface to load cars into companies
 //    test1();
-        Main m = new Main("trips");
-
-        ManagerSessionRemote managerSession= m.getNewManagerSession("test", "test");
-        CarRentalSessionRemote rentals=m.getNewReservationSession("timeh");
-        RentalCompanyLoader.CrcData d = RentalCompanyLoader.loadData("hertz.csv");
-        managerSession.createRentalCompany("hertz", d.regions, d.cars);
-        d = RentalCompanyLoader.loadData("dockx.csv");
-        managerSession.createRentalCompany("dockx", d.regions, d.cars);
-        System.out.println(rentals.getAvailableCarTypes(new Date(0),new Date(10)));
-        m.run();
+//        Main m = new Main("trips");
+//
+//        ManagerSessionRemote managerSession= m.getNewManagerSession("test", "test");
+//        CarRentalSessionRemote rentals=m.getNewReservationSession("timeh");
+//        RentalCompanyLoader.CrcData d = RentalCompanyLoader.loadData("hertz.csv");
+//        managerSession.createRentalCompany("hertz", d.regions, d.cars);
+//        d = RentalCompanyLoader.loadData("dockx.csv");
+//        managerSession.createRentalCompany("dockx", d.regions, d.cars);
+//        System.out.println(rentals.getAvailableCarTypes(new Date(0),new Date(10)));
+//        m.run();
 //        System.out.println(m.getCheapestCarType(rentals, new Date(0   ),new Date(100), "Brussels"));
 //      ses.createCartype("merc", 1, 1.1f, 11, true);
 //      ses.createCartype("merc2", 1, 1.1f, 11, true);
@@ -50,6 +52,19 @@ public class Main extends AbstractTestManagement<CarRentalSessionRemote, Manager
 //  
 //      
       }
+    static void test2()throws Exception{
+        
+        Main m = new Main("trips");
+      ManagerSessionRemote managerSession= m.getNewManagerSession("test", "test");
+      CarRentalSessionRemote rentalSession=m.getNewReservationSession("timmeh");
+        RentalCompanyLoader.CrcData d = RentalCompanyLoader.loadData("hertz.csv");
+        managerSession.createRentalCompany("hertz", d.regions, d.cars);
+        d = RentalCompanyLoader.loadData("dockx.csv");
+        managerSession.createRentalCompany("dockx", d.regions, d.cars);
+        rentalSession.createQuote("hertz", new ReservationConstraints(new Date(0), new Date(100),"Special", "Antwerp"));
+        rentalSession.createQuote("hertz", new ReservationConstraints(new Date(0), new Date(100),"Special", "Antwerp"));
+        System.out.println(rentalSession.confirmQuotes());        
+    }
 //      for(String s:ses.getReservations())
        static void test1() throws Exception{
                Main m =new Main("trips");//.run();
