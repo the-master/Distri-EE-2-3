@@ -1,23 +1,16 @@
 package session;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import rental.Car2;
 import rental.CarRentalCompany;
 import rental.CarType;
-import rental.RentalStore;
-import rental.Res;
-import rental.Reservation;
 
 @Stateless
 public class ManagerSession implements ManagerSessionRemote {
@@ -27,16 +20,6 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<CarType> getCarTypes(String company) {
         return new HashSet<>(em.createQuery("SELECT c FROM CarRentalCompany a JOIN a.carTypes c WHERE a.name=:name").setParameter("name", company).getResultList());
-//        return new HashSet(em.find(CarRentalCompany.class, company).getAllTypes());
-//        return new HashSet<CarType>(em.createQuery("SELECT a FROM CarType a").getResultList());
-        
-        
-//        try {
-//            return new HashSet<CarType>(RentalStore.getRental(company).getAllTypes());
-//        } catch (IllegalArgumentException ex) {
-//            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
     }
     
     
@@ -44,54 +27,15 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<Integer> getCarIds(String company, String type) {
         final HashSet<Integer> rv = new HashSet<>();
         return new HashSet<Integer>(em.createQuery("SELECT c.id FROM Car c").getResultList());
-//        .forEach(new Consumer() {
-//
-//            @Override
-//            public void accept(Object t) {
-//                rv.add(((Car2)t).getId());
-//                System.out.println(t);
-//            }
-//        });
-      //        Set<Integer> out = new HashSet<Integer>();
-//        try {
-//            for(Car c: RentalStore.getRental(company).getCars(type)){
-//                out.add(c.getId());
-//            }
-//        } catch (IllegalArgumentException ex) {
-//            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
-//        return out;
     }
 
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         return em.createQuery("SELECT r FROM Reservation r JOIN CAR2 c WHERE r MEMBER OF c.reservations AND c.id=:id").setParameter("id", id).getResultList().size();
-//        try {
-//            return RentalStore.getRental(company).getCar(id).getReservations().size();
-//        } catch (IllegalArgumentException ex) {
-//            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-//            return 0;
-//        }
     }
 
     @Override
     public int getNumberOfReservations(String company, String type) {
-
-        
-//    return ((Long)  em.createQuery("SELECT count(res) FROM Reservation res WHERE res.rentalCompany =:comp AND res.carType = :type").setParameter("type", type).setParameter("comp", company).getSingleResult()).intValue();
-//        Set<Reservation> out = new HashSet<Reservation>();
-//        try {
-//            for(Car c: RentalStore.getRental(company).getCars(type)){
-//                out.addAll(c.getReservations());
-//            }
-//        } catch (IllegalArgumentException ex) {
-//            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-//            return 0;
-//        }
-//        return out.size();
-//        return 0;
-
         List<Object> count = em.createQuery("SELECT COUNT(r) FROM Reservation r WHERE r.carType = :type AND r.rentalCompany = :company ").setParameter("company", company).setParameter("type", type).getResultList();
         return count.size()>0 ? ((Long) count.get(0)).intValue() : 0;
     }
@@ -127,17 +71,7 @@ public class ManagerSession implements ManagerSessionRemote {
           em.persist(ca);
           em.flush();
           c.addCar(ca);
-//          em.persist(c);
-//          em.flush();
           System.out.println("done with 1 car");
-//          c.addCarType(car.getType());
-//          Car ca=new Car();
-//          ca.setType(car.getType());
-//          em.clear();
-//          em.persist(ca);
-//          em.flush();
-          
-//          c.addCar(car);
       }
       em.flush();
     }
@@ -150,19 +84,28 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
-        return (CarType) em.createQuery(
-                "SELECT type "
-                + "FROM CarType type, CarRentalCompany comp ,Reservation res "
-               + "WHERE comp.name=:name AND type MEMBER OFF comp.carTypes "
-                 + "AND res.carType = type.name AND MAX(count(res))"
-                + " AND ((:yearStart <= res.startDate AND res.startDate <=yearEnd)OR(:yearStart<=res.endDate AND red.endDate <= yearEND))"
-                ).setParameter("yearStart", new Date(0,0,year)).setParameter("yearEnd", new Date(30,11,year)).setParameter("name", carRentalCompanyName).getSingleResult();
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       List<Object[]> result= em.createQuery(
+                "SELECT carType, COUNT(res) "
+                + "FROM CarType cartype, CarRentalCompany comp ,Reservation res "
+               + "WHERE comp.name=:name AND cartype MEMBER OF comp.carTypes "
+                 + "AND res.carType = cartype.name "
+                +"AND ( ( :yearStart <= res.startDate AND res.startDate <=:yearEnd ) OR ( :yearStart<=res.endDate AND res.endDate <= :yearEnd ) ) GROUP BY carType "
+                ).setParameter("name", carRentalCompanyName).setParameter("yearStart", new Date(year-1900,0,0)).setParameter("yearEnd", new Date(year-1900,11,30)).getResultList(); 
+        Long max = Long.MIN_VALUE;
+        CarType biggest = null;
+        for (Object[] o : result) {
+            CarType ct = (CarType) o[0];
+            Long nb = (Long) o[1];
+            if (nb > max) {
+                max = nb;
+                biggest = ct;
+            }
+        }
+        return biggest;
     }
 
     @Override
     public Set<String> getBestClients() {
-        //List<Object[]> result = em.createQuery("SELECT r.carRenter, r.total FROM (Reservation r INNER JOIN (SELECT r2.carRenter, SUM(r2.rentalPrice) total FROM Reservation r2 GROUP BY r2.carRenter) AS total )").getResultList();
         List<Object[]> query = em.createQuery("SELECT r.carRenter, COUNT(r.carRenter) FROM Reservation r GROUP BY r.carRenter").getResultList();
         HashSet<String> result = new HashSet<>();
         Long max = Long.MIN_VALUE;
