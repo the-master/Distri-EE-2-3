@@ -76,19 +76,8 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public int getNumberOfReservations(String company, String type) {
-        
-//        em.createQuery("SELECT r FROM Reservation r JOIN (SELECT  car FROM CarRentalCompany c JOIN c.cars car WHERE c.name=:name AND car.type.name=:type) c WHERE" )
-        Set<Reservation> out = new HashSet<Reservation>();
-//        try {
-//            for(Car c: RentalStore.getRental(company).getCars(type)){
-//                out.addAll(c.getReservations());
-//            }
-//        } catch (IllegalArgumentException ex) {
-//            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-//            return 0;
-//        }
-//        return out.size();
-        return 0;
+        List<Object> count = em.createQuery("SELECT COUNT(r) FROM Reservation r WHERE r.carType = :type AND r.rentalCompany = :company ").setParameter("company", company).setParameter("type", type).getResultList();
+        return count.size()>0 ? ((Long) count.get(0)).intValue() : 0;
     }
 
     @Override
