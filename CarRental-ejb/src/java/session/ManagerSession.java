@@ -150,12 +150,23 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public Set<String> getBestClients() {
-        List<String> result = em.createQuery("SELECT r.carRenter FROM Reservation r GROUP BY r.carRenter ORDER BY SUM(r.rentalPrice)").getResultList();
-        System.out.println("Printing best clients"); //ORDER BY SUM(r.rentalPrice) GROUP BY r.carRenter
-        for (String s : result) {
-            System.out.println(s);
+        //List<Object[]> result = em.createQuery("SELECT r.carRenter, r.total FROM (Reservation r INNER JOIN (SELECT r2.carRenter, SUM(r2.rentalPrice) total FROM Reservation r2 GROUP BY r2.carRenter) AS total )").getResultList();
+        List<Object[]> query = em.createQuery("SELECT r.carRenter, SUM(r.rentalPrice) FROM Reservation r GROUP BY r.carRenter").getResultList();
+        System.out.println("Printing best clients"); 
+        HashSet<String> result = new HashSet<>();
+        double max = Double.MIN_VALUE;
+        for (Object[] x : query) {
+            double price = (double) x[1];
+            if (price > max) {
+                max = price;
+                result.clear();
+                result.add((String) x[0]);
+            } else if (price == max) {
+                result.add((String) x[0]);
+            }
         }
-        return null;
+        
+        return result;
     }
 
 }
