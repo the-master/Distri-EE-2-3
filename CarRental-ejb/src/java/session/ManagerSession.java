@@ -2,6 +2,7 @@ package session;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,8 +78,8 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type) {
         
-//        em.createQuery("SELECT r FROM Reservation r JOIN (SELECT  car FROM CarRentalCompany c JOIN c.cars car WHERE c.name=:name AND car.type.name=:type) c WHERE" )
-        Set<Reservation> out = new HashSet<Reservation>();
+    return ((Long)  em.createQuery("SELECT count(res) FROM Reservation res WHERE res.rentalCompany =:comp AND res.carType = :type").setParameter("type", type).setParameter("comp", company).getSingleResult()).intValue();
+//        Set<Reservation> out = new HashSet<Reservation>();
 //        try {
 //            for(Car c: RentalStore.getRental(company).getCars(type)){
 //                out.addAll(c.getReservations());
@@ -88,7 +89,7 @@ public class ManagerSession implements ManagerSessionRemote {
 //            return 0;
 //        }
 //        return out.size();
-        return 0;
+//        return 0;
     }
 
     @Override
@@ -145,8 +146,14 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public CarType getMostPopularCarTypeIn(String carRentalCompanyName, int year) {
-//        em.createQuery(null);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (CarType) em.createQuery(
+                "SELECT type "
+                + "FROM CarType type, CarRentalCompany comp ,Reservation res "
+               + "WHERE comp.name=:name AND type MEMBER OFF comp.carTypes "
+                 + "AND res.carType = type.name AND MAX(count(res))"
+                + " AND ((:yearStart <= res.startDate AND res.startDate <=yearEnd)OR(:yearStart<=res.endDate AND red.endDate <= yearEND))"
+                ).setParameter("yearStart", new Date(0,0,year)).setParameter("yearEnd", new Date(30,11,year)).setParameter("name", carRentalCompanyName).getSingleResult();
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
