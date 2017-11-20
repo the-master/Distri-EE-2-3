@@ -77,8 +77,9 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public int getNumberOfReservations(String company, String type) {
+
         
-    return ((Long)  em.createQuery("SELECT count(res) FROM Reservation res WHERE res.rentalCompany =:comp AND res.carType = :type").setParameter("type", type).setParameter("comp", company).getSingleResult()).intValue();
+//    return ((Long)  em.createQuery("SELECT count(res) FROM Reservation res WHERE res.rentalCompany =:comp AND res.carType = :type").setParameter("type", type).setParameter("comp", company).getSingleResult()).intValue();
 //        Set<Reservation> out = new HashSet<Reservation>();
 //        try {
 //            for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -90,6 +91,9 @@ public class ManagerSession implements ManagerSessionRemote {
 //        }
 //        return out.size();
 //        return 0;
+
+        List<Object> count = em.createQuery("SELECT COUNT(r) FROM Reservation r WHERE r.carType = :type AND r.rentalCompany = :company ").setParameter("company", company).setParameter("type", type).getResultList();
+        return count.size()>0 ? ((Long) count.get(0)).intValue() : 0;
     }
 
     @Override
@@ -158,12 +162,21 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public Set<String> getBestClients() {
-        List<String> result = em.createQuery("SELECT r.carRenter FROM Reservation r GROUP BY r.carRenter ORDER BY SUM(r.rentalPrice)").getResultList();
-        System.out.println("Printing best clients"); //ORDER BY SUM(r.rentalPrice) GROUP BY r.carRenter
-        for (String s : result) {
-            System.out.println(s);
+        //List<Object[]> result = em.createQuery("SELECT r.carRenter, r.total FROM (Reservation r INNER JOIN (SELECT r2.carRenter, SUM(r2.rentalPrice) total FROM Reservation r2 GROUP BY r2.carRenter) AS total )").getResultList();
+        List<Object[]> query = em.createQuery("SELECT r.carRenter, COUNT(r.carRenter) FROM Reservation r GROUP BY r.carRenter").getResultList();
+        HashSet<String> result = new HashSet<>();
+        Long max = Long.MIN_VALUE;
+        for (Object[] x : query) {
+            Long price = (Long) x[1];
+            if (price > max) {
+                max = price;
+                result.clear();
+                result.add((String) x[0]);
+            } else if (price.equals(max)) {
+                result.add((String) x[0]);
+            }
         }
-        return null;
+        return result;
     }
 
 }
