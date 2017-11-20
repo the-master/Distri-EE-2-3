@@ -150,10 +150,12 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public Set<String> getBestClients() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> result = em.createQuery("SELECT r.carRenter FROM Reservation r GROUP BY r.carRenter ORDER BY SUM(r.rentalPrice)").getResultList();
+        System.out.println("Printing best clients"); //ORDER BY SUM(r.rentalPrice) GROUP BY r.carRenter
+        for (String s : result) {
+            System.out.println(s);
+        }
+        return null;
     }
 
-    
-
- 
 }
